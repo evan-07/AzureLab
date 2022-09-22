@@ -31,3 +31,6 @@ Steps involved:
         
         
         -ssh to VM2 using Private IP 10.0.0.4
+
+7. Delete Resource Group VnetPeeringRG
+    az group delete --name VnetPeeringRG -y
