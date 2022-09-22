@@ -8,3 +8,5 @@ Task 5: Configure Azure DNS for internal name resolution
 Task 6: Configure Azure DNS for external name resolution
 
 
+![alt text](https://github.com/MicrosoftLearning/AZ-104-MicrosoftAzureAdministrator/blob/master/Instructions/media/lab04.png)
+
