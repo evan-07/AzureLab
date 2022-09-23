@@ -10,7 +10,7 @@ https://learn.microsoft.com/en-us/azure/virtual-machines/linux/tutorial-lamp-sta
 4. Creating a new Active Directory across two servers in an availability set, then join some VMs to it and make sure name resolution is working properly.
 
 5. Performing Backup and also replication for DR. Practice test and real failover, and restoring a single file from 3 days ago, after 8am but before noon.
-
+https://learn.microsoft.com/en-us/azure/backup/backup-azure-restore-files-from-vm
 6. Creating a VM with Jenkins installed.
 
 7. Setting up Ansible 
