@@ -1,0 +1,37 @@
+
+###Create Resource Group
+rg=rg-lab
+location=westus2
+
+az group create \
+--name $rg \
+--location $location
+
+###Create VNET
+vnet=vnet1
+vnetip=10.1.0.0/16
+
+az network vnet create \
+--resource-group $rg \
+--location $location \
+--address-prefixes $vnetip \
+--name $vnet1
+
+
+###Create Subnets
+subnet1=vnet1-subnet1
+subnet1ip=10.1.1.0/24
+subnet2=vnet1-subnet2
+subnet2ip=10.1.2.0/24
+
+az network vnet subnet create \ 
+--resource-group $rg \
+--location $location \
+--address-prefixes $subnetip1 \ 
+--name $subnet1
+
+az network vnet subnet create \
+--resource-group $rg \
+--location $location \
+--address-prefixes $subnetip2 \
+--name $subnet2
