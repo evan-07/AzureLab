@@ -24,14 +24,5 @@ subnet1ip=10.1.1.0/24
 subnet2=vnet1-subnet2
 subnet2ip=10.1.2.0/24
 
-az network vnet subnet create 
-	--address-prefixes $subnet1ip 
-	--name $subnet1
-	--resource-group $rg 
-	--vnet-name $vnet
-
-az network vnet subnet create 
-	--address-prefixes $subnet2ip 
-	--name $subnet2
-	--resource-group $rg 
-	--vnet-name $vnet
+az network vnet subnet create --address-prefixes $subnet1ip --name $subnet1 --resource-group $rg --vnet-name $vnet 
+az network vnet subnet create --address-prefixes $subnet2ip --name $subnet2 --resource-group $rg --vnet-name $vnet
