@@ -1,7 +1,7 @@
 
 ###Create Resource Group
 rg=rg-lab
-location=westus2
+location=westus3
 
 az group create \
 --name $rg \
@@ -26,3 +26,56 @@ subnet2ip=10.1.2.0/24
 
 az network vnet subnet create --address-prefixes $subnet1ip --name $subnet1 --resource-group $rg --vnet-name $vnet 
 az network vnet subnet create --address-prefixes $subnet2ip --name $subnet2 --resource-group $rg --vnet-name $vnet
+
+
+###Create VMs
+rg=rg-lab
+vm1=vnet1-vm-mgmt1
+vm2=vnet1-vm-web1
+location=westus3
+image=UbuntuLTS
+size=Standard_B1ls
+
+az vm create --name $vm1 --resource-group $rg --location $location --image $image --admin-username azureuser --admin-password 1qazXSW@3edc --vnet-name $vnet  --subnet $subnet1 --public-ip-sku Standard --nsg ""
+az vm create --name $vm2 --resource-group $rg --location $location --image $image --admin-username azureuser --admin-password 1qazXSW@3edc --vnet-name $vnet  --subnet $subnet2 --public-ip-sku Standard --nsg ""
+
+### Install Apache2
+az vm run-command invoke \
+   -g $rg \
+   -n $vm2 \
+   --command-id RunShellScript \
+   --scripts "sudo apt-get -y update && sudo apt-get -y install apache2"
+
+### Create NSG
+az network nsg create --name vnet1-web-NSG --resource-group $rg --location westus3
+az network nsg create --name vnet1-mgt-NSG --resource-group $rg --location westus3
+
+### Create NSG Rules 
+######SSH Rule for the Mgt VM
+az network nsg rule create --name AllowSSHInbound \
+                           --nsg-name vnet1-mgt-NSG \
+                           --priority 1000 \
+                           --resource-group $rg \
+                           --access Allow \
+                           --description "Allow SSH Inbound Connections" \
+                           --direction Inbound \
+                           --protocol TCP
+######HTTP Rule for the Web VM
+az network nsg rule create --name AllowHTTPInbound \
+                           --nsg-name vnet1-web-NSG \
+                           --priority 2000 \
+                           --resource-group $rg \
+                           --access Allow \
+                           --description "Allow HTTP Inbound Connections" \
+                           --direction Inbound \
+                           --protocol TCP
+
+###Associate the Subnets to an NSG
+az network vnet subnet update --resource-group $rg \
+                           --name $subnet1 \
+                           --vnet-name $vnet \
+                           --network-security-group vnet1-mgt-NSG
+az network vnet subnet update --resource-group $rg \
+                           --name $subnet2 \
+                           --vnet-name $vnet \
+                           --network-security-group vnet1-web-NSG
