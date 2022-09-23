@@ -30,3 +30,15 @@ Connect_virtual_networks_with_VNet_peering
 https://learn.microsoft.com/en-us/azure/dns/tutorial-alias-pip
 
 https://learn.microsoft.com/en-us/azure/service-fabric/service-fabric-tutorial-create-container-images
+
+https://learn.microsoft.com/en-us/azure/virtual-network/tutorial-filter-network-traffic
+
+https://learn.microsoft.com/en-us/azure/mariadb/tutorial-design-database-cli
+
+https://learn.microsoft.com/en-us/azure/site-recovery/azure-to-azure-tutorial-dr-drill
+
+https://learn.microsoft.com/en-us/azure/aks/tutorial-kubernetes-prepare-app
+
+https://learn.microsoft.com/en-us/azure/mysql/single-server/tutorial-design-database-using-cli
+
+https://learn.microsoft.com/en-us/azure/data-factory/lab-data-flow-data-share
