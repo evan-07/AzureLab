@@ -1,0 +1,11 @@
+Sample projects to be included in this repository are:
+
+1. Deploying a Wordpress site, without using the marketplace, using web apps and MySQL PaaS service.
+
+2. Mapping an SMB file share to your desktop.
+
+3. Writing an ARM template to deploy a windows VM, install extensions, be managed by an automation account for updates, and run a post-deploy script inside the VM (automatically) to deploy an MSI.
+
+4. Creating a new Active Directory across two servers in an availability set, then join some VMs to it and make sure name resolution is working properly.
+
+5. Performing Backup and also replication for DR. Practice test and real failover, and restoring a single file from 3 days ago, after 8am but before noon.
