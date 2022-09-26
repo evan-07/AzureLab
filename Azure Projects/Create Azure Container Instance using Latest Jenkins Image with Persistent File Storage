@@ -1,0 +1,60 @@
+#Initialize Variables
+RG="Jenkins-Aci-Rg"
+LOC="eastus2"
+ACI="jenkins-aci"
+IMAGE="docker.io/jenkins/jenkins:lts"
+PORT="8080"
+FS="jenkinsfs"
+
+#Create Resource Group
+az group create --name $RG --location $LOC
+sleep 30
+
+#Create Storage Account for Persistent Fileshare
+STORAGE_ACCOUNT="storagejenkins$RANDOM"
+az storage account create --name $STORAGE_ACCOUNT \
+--resource-group $RG \
+--location $LOC \
+--sku Standard_LRS 
+sleep 30
+
+#Create File Share inside Storage Account
+az storage share-rm create \
+  --resource-group $RG \
+  --storage-account $STORAGE_ACCOUNT\
+  --name $FS \
+  --quota 1024 \
+  --enabled-protocols SMB \
+  --output table 
+sleep 60
+
+#Create Container Instance with Persistent FIle Share
+STORAGE_ACCOUNT_KEY=$(az storage account keys list --account-name $STORAGE_ACCOUNT --resource-group $RG --query "[0].value" -o tsv)
+az container create --resource-group $RG \
+--name $ACI \
+--image $IMAGE \
+--ports $PORT \
+--azure-file-volume-account-name $STORAGE_ACCOUNT \
+--azure-file-volume-account-key "$STORAGE_ACCOUNT_KEY" \
+--ip-address Public \
+--azure-file-volume-share-name $FS \
+--azure-file-volume-mount-path "/var/jenkins_home"
+
+#Delaying for 300 seconds for the installation of Jenkins to finish, otherwise, the admin password will not be available yet which will cause script to crash
+sleep 300
+
+#Get the Initial Admin Password to be used in Jenkins' Initial Setup
+INITIAL_ADMIN_PASS=$(az container exec -g $RG \
+--name $ACI \
+--container-name $ACI \
+--exec-command "cat /var/jenkins_home/secrets/initialAdminPassword")
+
+#Get the Public IP Address of the Container Instance
+PUBLIC_IP=$(az container show --name $ACI \
+--resource-group $RG \
+--query ipAddress.ip \
+--output tsv)
+
+#Display the public URL and Admin Pass for configuration
+echo "Public IP ="$PUBLIC_IP":"$PORT
+echo "Initial Admin Pass=" $INITIAL_ADMIN_PASS
