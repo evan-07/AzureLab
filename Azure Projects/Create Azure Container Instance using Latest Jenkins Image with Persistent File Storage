@@ -1,3 +1,18 @@
+#The goal of this lab is to show how to create a Jenkins master server using Azure Container Instances with a persistent disk using a File share in a Storage Account.
+#The steps include the following:
+# 1. Create Resource Group
+# 2. Create Storage Account for persistent fileshare
+#    ***Note: The storage account for this exercise is in the same host group as the ACI. Once you create the resource group, the storage will be deleted as well.
+# 3. Create File share inside the newly created Storage account
+# 4. Get the Storage account key and save into a variable
+# 5. Create an Azure container instance using the LTS image of Jenkins in Dockerhub, specifying the fileshare along with it. 
+#    ***Please take note that the IP address used here is a public one due to the purpose of this container is only to provide training to a small group of individuals.
+#    ***For Production applications please consider using using the a private IP address and Azure Bastion for a secured connection.
+# 6. The following variables are created for their respective purpose:
+#    $PUBLIC_IP - IP address with port where you can access Jenkins
+#    $INITIAL_ADMIN_PASS - Initial admin password you will need in configuring Jenkins for the first time
+
+
 #Initialize Variables
 RG="Jenkins-Aci-Rg"
 LOC="eastus2"
@@ -56,5 +71,5 @@ PUBLIC_IP=$(az container show --name $ACI \
 --output tsv)
 
 #Display the public URL and Admin Pass for configuration
-echo "Public IP ="$PUBLIC_IP":"$PORT
-echo "Initial Admin Pass=" $INITIAL_ADMIN_PASS
+echo "Public IP="$PUBLIC_IP":"$PORT
+echo "Initial Admin Pass="$INITIAL_ADMIN_PASS
