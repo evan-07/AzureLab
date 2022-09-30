@@ -1,0 +1,158 @@
+###Create Resource Group
+rg=RG1
+location=eastus2
+
+az group create --name $rg --location $location
+
+###Create VNET
+vnet=vnet1
+vnetip=10.0.0.0/16
+
+az network vnet create \
+--resource-group $rg \
+--location $location \
+--address-prefixes $vnetip \
+--name $vnet
+
+###Create Subnets
+subnet=subnet1
+subnetip=10.0.1.0/24
+
+az network vnet subnet create --address-prefixes $subnetip --name $subnet --resource-group $rg --vnet-name $vnet 
+
+##Create NSG
+vnetnsg=vnetnsg
+
+az network nsg create --name $vnetnsg --resource-group $rg --location $location
+
+#Create NSG rule to allow SSH connection
+az network nsg rule create --name AllowSSHInbound \
+                           --nsg-name $vnetnsg \
+                           --priority 1000 \
+                           --resource-group $rg \
+                           --access Allow \
+                           --destination-port-ranges 22\
+                           --description "Allow SSH Inbound Connections" \
+                           --direction Inbound \
+                           --protocol TCP
+
+az network nsg rule create --name AllowICMPInbound \
+                           --nsg-name $vnetnsg \
+                           --priority 2000 \
+                           --resource-group $rg \
+                           --access Allow \
+                           --description "Allow ICMP Inbound Connections" \
+                           --direction Inbound \
+                           --protocol ICMP \
+                           --source-address-prefixes $vnetip
+
+###Define variables to be used by the virtual machines
+image=UbuntuLTS
+size=Standard_B1ls
+vm0=vm0
+vm1=vm-ws1
+vm2=vm-ws2
+vm3=vm-ws3
+vm4=vm-db1
+vm5=vm-db2
+
+az vm create --name $vm0 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username azureuser \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg
+
+az vm create --name $vm1 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username azureuser \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg
+
+az vm create --name $vm2 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username azureuser \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg
+
+az vm create --name $vm3 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username azureuser \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg
+
+az vm create --name $vm4 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username azureuser \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg
+
+az vm create --name $vm5 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username azureuser \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg
+
+
+az vm run-command invoke \
+   -g $rg \
+   -n $vm0 \
+   --command-id RunShellScript \
+   --scripts "sudo apt-get update && sudo apt-get install -y libssl-dev libffi-dev python-dev python-pip"
+
+
+az vm run-command invoke \
+   -g $rg \
+   -n $vm0 \
+   --command-id RunShellScript \
+   --scripts "sudo pip install ansible[azure]"
+
+
+###Display Public IP of the servers
+vm0publicip=$(az network public-ip show -g $rg -n ${vm0}publicip --query ipAddress --output tsv)
+vm1publicip=$(az network public-ip show -g $rg -n ${vm1}publicip --query ipAddress --output tsv)
+vm2publicip=$(az network public-ip show -g $rg -n ${vm2}publicip --query ipAddress --output tsv)
+vm3publicip=$(az network public-ip show -g $rg -n ${vm3}publicip --query ipAddress --output tsv)
+vm4publicip=$(az network public-ip show -g $rg -n ${vm4}publicip --query ipAddress --output tsv)
+vm5publicip=$(az network public-ip show -g $rg -n ${vm5}publicip --query ipAddress --output tsv)
+
+echo "Main Server"
+echo "vm0=$vm0publicip"
+echo ""
+echo "Web Servers"
+echo "vm1=$vm1publicip"
+echo "vm2=$vm2publicip"
+echo "vm3=$vm3publicip"
+echo ""
+echo "DB Servers"
+echo "vm4=$vm4publicip"
+echo "vm5=$vm5publicip"
