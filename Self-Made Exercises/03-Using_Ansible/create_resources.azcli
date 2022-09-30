@@ -125,37 +125,37 @@ az vm create --name $vm5 \
 #Update Private IP addresses of NICs to static
 az network nic ip-config update \
     --name ${vm0}PublicIp \
-    --resource-group myResourceGroup \
+    --resource-group $rg \
     --nic-name ${vm0}VMNic \
     --private-ip-address 10.0.0.4
 
 az network nic ip-config update \
     --name ${vm1}PublicIp \
-    --resource-group myResourceGroup \
+    --resource-group $rg \
     --nic-name ${vm1}VMNic \
     --private-ip-address 10.0.0.5
 
 az network nic ip-config update \
     --name ${vm2}PublicIp \
-    --resource-group myResourceGroup \
+    --resource-group $rg \
     --nic-name ${vm2}VMNic \
     --private-ip-address 10.0.0.6
 
 az network nic ip-config update \
     --name ${vm3}PublicIp \
-    --resource-group myResourceGroup \
+    --resource-group $rg \
     --nic-name ${vm3}VMNic \
     --private-ip-address 10.0.0.7
 
 az network nic ip-config update \
     --name ${vm4}PublicIp \
-    --resource-group myResourceGroup \
+    --resource-group $rg \
     --nic-name ${vm4}VMNic \
     --private-ip-address 10.0.0.8
 
 az network nic ip-config update \
     --name ${vm5}PublicIp \
-    --resource-group myResourceGroup \
+    --resource-group $rg \
     --nic-name ${vm5}VMNic \
     --private-ip-address 10.0.0.9
 
@@ -184,8 +184,7 @@ az vm run-command invoke \
 ###Display Public IP of the servers
 vm0publicip=$(az network public-ip show -g $rg -n ${vm0}PublicIp --query ipAddress --output tsv)
 
-echo "Control Server"
-echo "vm0=$vm0publicip"
+echo "Control Server" "vm0=$vm0publicip"
 
 
 
