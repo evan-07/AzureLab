@@ -60,7 +60,7 @@ az vm create --name $vm0 \
 --resource-group $rg \
 --location $location \
 --image $image \
---admin-username azureuser \
+--admin-username vm0user \
 --admin-password 1qazXSW@3edc \
 --vnet-name $vnet  \
 --subnet $subnet \
@@ -71,7 +71,7 @@ az vm create --name $vm1 \
 --resource-group $rg \
 --location $location \
 --image $image \
---admin-username azureuser \
+--admin-username ansible \
 --admin-password 1qazXSW@3edc \
 --vnet-name $vnet  \
 --subnet $subnet \
@@ -82,7 +82,7 @@ az vm create --name $vm2 \
 --resource-group $rg \
 --location $location \
 --image $image \
---admin-username azureuser \
+--admin-username ansible \
 --admin-password 1qazXSW@3edc \
 --vnet-name $vnet  \
 --subnet $subnet \
@@ -93,7 +93,7 @@ az vm create --name $vm3 \
 --resource-group $rg \
 --location $location \
 --image $image \
---admin-username azureuser \
+--admin-username ansible \
 --admin-password 1qazXSW@3edc \
 --vnet-name $vnet  \
 --subnet $subnet \
@@ -104,7 +104,7 @@ az vm create --name $vm4 \
 --resource-group $rg \
 --location $location \
 --image $image \
---admin-username azureuser \
+--admin-username ansible \
 --admin-password 1qazXSW@3edc \
 --vnet-name $vnet  \
 --subnet $subnet \
@@ -115,43 +115,99 @@ az vm create --name $vm5 \
 --resource-group $rg \
 --location $location \
 --image $image \
---admin-username azureuser \
+--admin-username ansible \
 --admin-password 1qazXSW@3edc \
 --vnet-name $vnet  \
 --subnet $subnet \
 --public-ip-sku Standard \
 --nsg $vnetnsg
 
+#Update Private IP addresses of NICs to static
+az network nic ip-config update \
+    --name ${vm0}PublicIp \
+    --resource-group myResourceGroup \
+    --nic-name ${vm0}VMNic \
+    --private-ip-address 10.0.0.4
 
+az network nic ip-config update \
+    --name ${vm1}PublicIp \
+    --resource-group myResourceGroup \
+    --nic-name ${vm1}VMNic \
+    --private-ip-address 10.0.0.5
+
+az network nic ip-config update \
+    --name ${vm2}PublicIp \
+    --resource-group myResourceGroup \
+    --nic-name ${vm2}VMNic \
+    --private-ip-address 10.0.0.6
+
+az network nic ip-config update \
+    --name ${vm3}PublicIp \
+    --resource-group myResourceGroup \
+    --nic-name ${vm3}VMNic \
+    --private-ip-address 10.0.0.7
+
+az network nic ip-config update \
+    --name ${vm4}PublicIp \
+    --resource-group myResourceGroup \
+    --nic-name ${vm4}VMNic \
+    --private-ip-address 10.0.0.8
+
+az network nic ip-config update \
+    --name ${vm5}PublicIp \
+    --resource-group myResourceGroup \
+    --nic-name ${vm5}VMNic \
+    --private-ip-address 10.0.0.9
+
+#Install python
 az vm run-command invoke \
    -g $rg \
    -n $vm0 \
    --command-id RunShellScript \
    --scripts "sudo apt-get update && sudo apt-get install -y libssl-dev libffi-dev python-dev python-pip"
 
+#Install Ansible
 az vm run-command invoke \
    -g $rg \
    -n $vm0 \
    --command-id RunShellScript \
    --scripts "sudo pip install ansible[azure]"
 
+#Create Ansible folder and inventory file
+az vm run-command invoke \
+   -g $rg \
+   -n $vm0 \
+   --command-id RunShellScript \
+   --scripts "mkdir ansible && cd ansible && echo 10.0.1.11 >> inventory && echo 10.0.1.12 >> inventory && echo 10.0.1.13 >> inventory && echo 10.0.1.14 >> inventory && echo 10.0.1.15 >> inventory"   
+
 
 ###Display Public IP of the servers
-vm0publicip=$(az network public-ip show -g $rg -n ${vm0}publicip --query ipAddress --output tsv)
-vm1publicip=$(az network public-ip show -g $rg -n ${vm1}publicip --query ipAddress --output tsv)
-vm2publicip=$(az network public-ip show -g $rg -n ${vm2}publicip --query ipAddress --output tsv)
-vm3publicip=$(az network public-ip show -g $rg -n ${vm3}publicip --query ipAddress --output tsv)
-vm4publicip=$(az network public-ip show -g $rg -n ${vm4}publicip --query ipAddress --output tsv)
-vm5publicip=$(az network public-ip show -g $rg -n ${vm5}publicip --query ipAddress --output tsv)
+vm0publicip=$(az network public-ip show -g $rg -n ${vm0}PublicIp --query ipAddress --output tsv)
 
-echo "Main Server"
+echo "Control Server"
 echo "vm0=$vm0publicip"
-echo ""
-echo "Web Servers"
-echo "vm1=$vm1publicip"
-echo "vm2=$vm2publicip"
-echo "vm3=$vm3publicip"
-echo ""
-echo "DB Servers"
-echo "vm4=$vm4publicip"
-echo "vm5=$vm5publicip"
+
+
+
+
+#Control node
+ssh-keygen
+
+#Remote
+ssh vm5user@10.0.1.9
+sudo adduser ansible --gecos ""
+sudo usermod -aG sudo ansible
+exit
+
+#Control node
+ssh-copy-id ansible@10.0.1.9
+
+
+ansible-inventory -i inventory --list
+ansible -i inventory all -m ping
+
+
+
+Reference: 
+https://adamtheautomator.com/ansible-hosts-file/
+https://linuxhint.com/ansible-tutorial-beginners/
