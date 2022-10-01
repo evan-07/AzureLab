@@ -1,0 +1,56 @@
+###SSH to the control node to setup ansible files, enter password when prompted
+ssh ansible@$vm0publicip
+
+##############Control node###########
+#ssh-keygen -t rsa -N ''
+ssh-keygen -q -t rsa -N '' -f /home/ansible/.ssh/id_rsa <<<y >/dev/null 2>&1
+
+#Control node
+ssh-copy-id ansible@10.0.1.5
+ssh-copy-id ansible@10.0.1.6
+ssh-copy-id ansible@10.0.1.7
+ssh-copy-id ansible@10.0.1.8
+
+#OR
+#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.5
+#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.6
+#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.7
+#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.8
+#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.9
+
+#Sample Ansible Commands
+ansible-inventory -i inventory --list
+ansible -i inventory all -m ping
+ansible -i inventory webservers -m ping
+ansible -i inventory webservers -a "/bin/df"
+ansible -i inventory dbservers  -a "/bin/echo "
+ansible -i inventory all -a "hostname"
+ansible-playbook -i inventory apache_install.yml -i inventory
+
+
+###############################################
+#sshpass -f password.txt ssh-copy-id user@yourserver
+#sshpass -f /home/ansible/ansible/password/vm1.txt ssh-copy-id ansible@10.0.1.13
+
+
+#ssh-keygen -t rsa
+
+Reference: 
+https://adamtheautomator.com/ansible-hosts-file/
+https://linuxhint.com/ansible-tutorial-beginners/
+https://www.scaleway.com/en/docs/tutorials/install-apache-ansible/
+https://www.digitalocean.com/community/tutorials/how-to-configure-apache-using-ansible-on-ubuntu-14-04
+
+Videos:
+https://www.youtube.com/watch?v=1id6ERvfozo
+https://www.youtube.com/watch?v=fHO1X93e4WA
+
+
+#mkpasswd --method=SHA-512
+#ssh-keyscan 10.0.1.11 >> ~/.ssh/known_hosts
+#ssh-keyscan 10.0.1.12 >> ~/.ssh/known_hosts
+##ssh-keyscan 10.0.1.13 >> ~/.ssh/known_hosts
+#ssh-keyscan 10.0.1.14 >> ~/.ssh/known_hosts
+#ssh-keyscan 10.0.1.15 >> ~/.ssh/known_hosts
+
+#ansible-playbook deploy_ssh.yml --ask-pass -i inventory
