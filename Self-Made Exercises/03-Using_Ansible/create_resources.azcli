@@ -36,6 +36,17 @@ az network nsg rule create --name AllowSSHInbound \
                            --direction Inbound \
                            --protocol TCP
 
+#Create NSG rule to allow HTTP connection
+az network nsg rule create --name AllowHTTPInbound \
+                           --nsg-name $vnetnsg \
+                           --priority 1500 \
+                           --resource-group $rg \
+                           --access Allow \
+                           --destination-port-ranges 80 \
+                           --description "Allow HTTP Inbound Connections" \
+                           --direction Inbound \
+                           --protocol TCP
+
 az network nsg rule create --name AllowICMPInbound \
                            --nsg-name $vnetnsg \
                            --priority 2000 \
