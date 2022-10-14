@@ -1,10 +1,14 @@
-###Create Resource Group
+#############################
+##--Create Resource Group--##
+#############################
 rg=RG1
 location=eastus2
 
 az group create --name $rg --location $location
 
-###Create VNET
+###################
+##--Create VNET--##
+###################
 vnet=vnet1
 vnetip=10.0.0.0/16
 
@@ -14,18 +18,24 @@ az network vnet create \
 --address-prefixes $vnetip \
 --name $vnet
 
-###Create Subnets
+#####################
+##--Create Subnet--##
+#####################
 subnet=subnet1
 subnetip=10.0.1.0/24
 
 az network vnet subnet create --address-prefixes $subnetip --name $subnet --resource-group $rg --vnet-name $vnet 
 
-##Create NSG
+##################
+##--Create NSG--##
+##################
 vnetnsg=vnetnsg
 
 az network nsg create --name $vnetnsg --resource-group $rg --location $location
 
-#Create NSG rule to allow SSH connection
+###############################################
+##--Create NSG rule to allow SSH connection--##
+###############################################
 az network nsg rule create --name AllowSSHInbound \
                            --nsg-name $vnetnsg \
                            --priority 1000 \
@@ -35,8 +45,10 @@ az network nsg rule create --name AllowSSHInbound \
                            --description "Allow SSH Inbound Connections" \
                            --direction Inbound \
                            --protocol TCP
-
-#Create NSG rule to allow HTTP connection
+                           
+################################################
+##--Create NSG rule to allow HTTP connection--##
+################################################
 az network nsg rule create --name AllowHTTPInbound \
                            --nsg-name $vnetnsg \
                            --priority 1500 \
@@ -57,13 +69,15 @@ az network nsg rule create --name AllowICMPInbound \
                            --protocol ICMP \
                            --source-address-prefixes $vnetip
 
-###Define variables to be used by the virtual machines
+###########################################################
+##--Define variables to be used by the virtual machines--##
+###########################################################
 image=UbuntuLTS
 size=Standard_B1ls
 vm0=vm-control
-vm1=vm-ws1
-vm2=vm-ws2
-vm3=vm-ws3
+vm1=vm-web1
+vm2=vm-web2
+vm3=vm-web3
 vm4=vm-db1
 
 az vm create --name $vm0 \
@@ -152,7 +166,9 @@ az vm create --name $vm4 \
 #    --nic-name ${vm4}VMNic \
 #    --private-ip-address 10.0.1.14
 
-#Install python
+######################
+##--Install python--##
+######################
 az vm run-command invoke \
    -g $rg \
    -n $vm0 \
@@ -160,43 +176,62 @@ az vm run-command invoke \
    --scripts "sudo apt-get update && sudo apt install python ansible -y"
 #   --scripts "sudo apt-get update && sudo apt-get install -y libssl-dev libffi-dev python-dev python-pip "
 
-#Install other modules needed
+####################################
+##--Install other modules needed--##
+####################################
 az vm run-command invoke \
    -g $rg \
    -n $vm0 \
    --command-id RunShellScript \
    --scripts "sudo apt install whois -y && sudo apt-get install sshpass"
 
-#Install Ansible
+#######################
+##--Install Ansible--##
+#######################
 az vm run-command invoke \
    -g $rg \
    -n $vm0 \
    --command-id RunShellScript \
    --scripts "sudo pip install ansible[azure]"
 
-#Create Ansible folder and inventory file
+################################################
+##--Create Ansible folder and inventory file--##
+################################################
 az vm run-command invoke \
    -g $rg \
    -n $vm0 \
    --command-id RunShellScript \
    --scripts "cd /home/ansible && mkdir ansible && chmod 777 ansible && cd ansible && touch inventory && chmod 777 inventory && echo [webservers] >> inventory && echo 10.0.1.5 >> inventory && echo 10.0.1.6 >> inventory && echo 10.0.1.7 >> inventory && echo [dbservers] >> inventory && echo 10.0.1.8 >> inventory"   
 
-#Create Key file
+#######################
+##--Create Key file--##
+#######################
 az vm run-command invoke \
    -g $rg \
    -n $vm0 \
    --command-id RunShellScript \
    --scripts "cd /home/ansible/ansible && echo 1qazXSW@3edc > key.txt"   
 
-
-###Display Public IP of the servers
+############################################
+##--Display Public IP of the web servers--##
+############################################
 vm0publicip=$(az network public-ip show -g $rg -n ${vm0}PublicIp --query ipAddress --output tsv)
 vm1publicip=$(az network public-ip show -g $rg -n ${vm1}PublicIp --query ipAddress --output tsv)
 vm2publicip=$(az network public-ip show -g $rg -n ${vm2}PublicIp --query ipAddress --output tsv)
 vm3publicip=$(az network public-ip show -g $rg -n ${vm3}PublicIp --query ipAddress --output tsv)
 
-echo "Control Server" "vm0=$vm0publicip"
-echo "Web Server    " "vm1=$vm1publicip"
-echo "Web Server    " "vm2=$vm2publicip"
-echo "Web Server    " "vm3=$vm3publicip"
+
+#############################################
+###--Add an A record set to the DNS zone--###
+#############################################
+az network dns record-set a add-record --ipv4-address $vm0publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm0 --zone $zone
+az network dns record-set a add-record --ipv4-address $vm1publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm1 --zone $zone
+az network dns record-set a add-record --ipv4-address $vm2publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm2 --zone $zone
+az network dns record-set a add-record --ipv4-address $vm3publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm3 --zone $zone
+
+##########################
+echo "Control Server" "${vm0}@evantech.dev"
+echo "Web Server    " "${vm1}@evantech.dev"
+echo "Web Server    " "${vm2}@evantech.dev"
+echo "Web Server    " "${vm3}@evantech.dev"
 
