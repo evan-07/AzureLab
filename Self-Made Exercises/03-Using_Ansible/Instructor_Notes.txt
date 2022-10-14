@@ -44,6 +44,7 @@ ansible -i inventory all --args "hostname"
 #######################################
 cd /home/ansible/ansible/
 vi apache_install.yml #paste the contents of the apache_install.yml file from git repo
+ansible-playbook -i inventory apache_install.yml --syntax-check
 ansible-playbook -i inventory apache_install.yml
 
 #########################################
@@ -51,6 +52,7 @@ ansible-playbook -i inventory apache_install.yml
 #########################################
 cd /home/ansible/ansible/
 vi apache_install.yml #paste the contents of the mysql_install.yml file from git repo
+ansible-playbook -i inventory mysql_install.yml --syntax-check
 ansible-playbook -i inventory mysql_install.yml
 
 
@@ -86,6 +88,7 @@ https://adamtheautomator.com/ansible-hosts-file/
 https://linuxhint.com/ansible-tutorial-beginners/
 https://www.scaleway.com/en/docs/tutorials/install-apache-ansible/
 https://www.digitalocean.com/community/tutorials/how-to-configure-apache-using-ansible-on-ubuntu-14-04
+https://medium.com/@kelom.x/ansible-mysql-installation-2513d0f70faf
 
 Videos:
 https://www.youtube.com/watch?v=1id6ERvfozo
