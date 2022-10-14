@@ -43,18 +43,15 @@ ansible -i inventory all --args "hostname"
 #-Create playbook for Ansible Install-#
 #######################################
 cd /home/ansible/ansible/
-nano apache_install.yml
+vi apache_install.yml #paste the contents of the apache_install.yml file from git repo
 ansible-playbook -i inventory apache_install.yml
 
 #########################################
 #--Create playbook for Ansible Install--#
 #########################################
 cd /home/ansible/ansible/
-nano apache_install.yml
+vi apache_install.yml #paste the contents of the mysql_install.yml file from git repo
 ansible-playbook -i inventory mysql_install.yml
-
-
-
 
 
 
