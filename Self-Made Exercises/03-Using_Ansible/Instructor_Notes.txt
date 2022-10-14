@@ -55,7 +55,6 @@ ansible-playbook -i inventory mysql_install.yml
 
 
 
-
 #------EOF------#
 
 
