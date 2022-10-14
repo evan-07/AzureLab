@@ -26,7 +26,6 @@ nano apache_install.yml
 #sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.6
 #sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.7
 #sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.8
-#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.9
 
 #Sample Ansible Commands
 ansible-inventory -i inventory --list
