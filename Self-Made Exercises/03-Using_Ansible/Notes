@@ -1,14 +1,7 @@
-#Public IP Values from previous run
-Control Server vm0=20.75.38.156
-Web Server     vm1=20.85.27.222
-Web Server     vm2=20.75.38.154
-Web Server     vm3=20.85.25.174
-
 ###SSH to the control node to setup ansible files, enter password when prompted
-ssh ansible@20.75.38.156
+ssh ansible@vm0-control.evantech.dev
 
 ##############Control node###########
-#ssh-keygen -t rsa -N ''
 ssh-keygen -q -t rsa -N '' -f /home/ansible/.ssh/id_rsa <<<y >/dev/null 2>&1
 
 #Add remote hosts to known hosts in control 
