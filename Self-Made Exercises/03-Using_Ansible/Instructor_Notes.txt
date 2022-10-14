@@ -1,7 +1,11 @@
-###SSH to the control node to setup ansible files, enter password when prompted
+################################################################################
+#-SSH to the control node to setup ansible files, enter password when prompted-#
+################################################################################
 ssh ansible@vm-control.evantech.dev
 
-##############Control node###########
+################
+#-Control node-#
+################
 ssh-keygen -q -t rsa -N '' -f /home/ansible/.ssh/id_rsa <<<y >/dev/null 2>&1
 
 #Add remote hosts to known hosts in control 
@@ -10,32 +14,68 @@ ssh-keyscan 10.0.1.6 >> ~/.ssh/known_hosts
 ssh-keyscan 10.0.1.7 >> ~/.ssh/known_hosts
 ssh-keyscan 10.0.1.8 >> ~/.ssh/known_hosts
 
+#################################################
+#-Control node copy the ssh ids to remote hosts-#
+#################################################
+#ssh-copy-id ansible@10.0.1.5
+#ssh-copy-id ansible@10.0.1.6
+#ssh-copy-id ansible@10.0.1.7
+#ssh-copy-id ansible@10.0.1.8
 
-#Control node copy the ssh ids to remote hosts
-ssh-copy-id ansible@10.0.1.5
-ssh-copy-id ansible@10.0.1.6
-ssh-copy-id ansible@10.0.1.7
-ssh-copy-id ansible@10.0.1.8
+#-OR Use commands below to disregard the need to enter password for each of the VM-#
+sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.5
+sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.6
+sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.7
+sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.8
 
-#Create playbook
+###########################
+#-Sample Ansible Commands-#
+###########################
+ansible-inventory -i inventory --list #show all vms in inventory
+ansible -i inventory all --module-name ping #ping all vms in inventory
+ansible -i inventory webservers --module-name ping #ping all vms in the webservers group
+ansible -i inventory webservers --args "/bin/df -h"
+ansible -i inventory dbservers  --args "echo 'I made it'" 
+ansible -i inventory all --args "hostname"
+
+
+#######################################
+#-Create playbook for Ansible Install-#
+#######################################
 cd /home/ansible/ansible/
 nano apache_install.yml
-
-#OR
-#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.5
-#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.6
-#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.7
-#sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.8
-
-#Sample Ansible Commands
-ansible-inventory -i inventory --list
-ansible -i inventory all -m ping
-ansible -i inventory webservers -m ping
-ansible -i inventory webservers -a "/bin/df"
-ansible -i inventory dbservers  -a "/bin/echo "
-ansible -i inventory all -a "hostname"
 ansible-playbook -i inventory apache_install.yml
+
+#########################################
+#--Create playbook for Ansible Install--#
+#########################################
+cd /home/ansible/ansible/
+nano apache_install.yml
 ansible-playbook -i inventory mysql_install.yml
+
+
+
+
+
+
+
+#------EOF------#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ###############################################
