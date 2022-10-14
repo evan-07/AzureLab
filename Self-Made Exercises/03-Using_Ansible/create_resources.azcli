@@ -91,7 +91,7 @@ az vm create --name $vm0 \
 --public-ip-sku Standard \
 --nsg $vnetnsg \
 --storage-sku Standard_LRS \
---os-disk-size-gb 8 
+--os-disk-size-gb 30 
 
 az vm create --name $vm1 \
 --resource-group $rg \
@@ -104,7 +104,7 @@ az vm create --name $vm1 \
 --public-ip-sku Standard \
 --nsg $vnetnsg \
 --storage-sku Standard_LRS \
---os-disk-size-gb 8 
+--os-disk-size-gb 30 
 
 az vm create --name $vm2 \
 --resource-group $rg \
@@ -117,7 +117,7 @@ az vm create --name $vm2 \
 --public-ip-sku Standard \
 --nsg $vnetnsg \
 --storage-sku Standard_LRS \
---os-disk-size-gb 8 
+--os-disk-size-gb 30 
 
 az vm create --name $vm3 \
 --resource-group $rg \
@@ -130,7 +130,7 @@ az vm create --name $vm3 \
 --public-ip-sku Standard \
 --nsg $vnetnsg \
 --storage-sku Standard_LRS \
---os-disk-size-gb 8 
+--os-disk-size-gb 30 
 
 az vm create --name $vm4 \
 --resource-group $rg \
@@ -143,7 +143,7 @@ az vm create --name $vm4 \
 --public-ip-sku Standard \
 --nsg $vnetnsg \
 --storage-sku Standard_LRS \
---os-disk-size-gb 8 
+--os-disk-size-gb 30 
 
 #Update Private IP addresses of NICs to static
 #az network nic ip-config update \
