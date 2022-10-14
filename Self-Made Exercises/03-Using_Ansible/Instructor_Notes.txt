@@ -1,5 +1,5 @@
 ###SSH to the control node to setup ansible files, enter password when prompted
-ssh ansible@vm0-control.evantech.dev
+ssh ansible@vm-control.evantech.dev
 
 ##############Control node###########
 ssh-keygen -q -t rsa -N '' -f /home/ansible/.ssh/id_rsa <<<y >/dev/null 2>&1
