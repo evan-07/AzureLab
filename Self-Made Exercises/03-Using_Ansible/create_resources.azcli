@@ -224,6 +224,7 @@ vm3publicip=$(az network public-ip show -g $rg -n ${vm3}PublicIp --query ipAddre
 #############################################
 ###--Add an A record set to the DNS zone--###
 #############################################
+zone=evantech.dev
 az network dns record-set a add-record --ipv4-address $vm0publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm0 --zone $zone
 az network dns record-set a add-record --ipv4-address $vm1publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm1 --zone $zone
 az network dns record-set a add-record --ipv4-address $vm2publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm2 --zone $zone
