@@ -80,6 +80,17 @@ vm2=vm-web2
 vm3=vm-web3
 vm4=vm-db1
 
+################################################
+##--Create Virtual Machines Availability Set--##
+################################################
+scaleset=AnsibleAVSet
+az vm availability-set create \
+    --resource-group $rg \
+    --name scaleset 
+
+###############################
+##--Create Virtual Machines--##
+###############################
 az vm create --name $vm0 \
 --resource-group $rg \
 --location $location \
@@ -104,7 +115,8 @@ az vm create --name $vm1 \
 --public-ip-sku Standard \
 --nsg $vnetnsg \
 --storage-sku Standard_LRS \
---os-disk-size-gb 30 
+--os-disk-size-gb 30 \
+--availability-set $scaleset
 
 az vm create --name $vm2 \
 --resource-group $rg \
@@ -117,7 +129,8 @@ az vm create --name $vm2 \
 --public-ip-sku Standard \
 --nsg $vnetnsg \
 --storage-sku Standard_LRS \
---os-disk-size-gb 30 
+--os-disk-size-gb 30 \
+--availability-set $scaleset
 
 az vm create --name $vm3 \
 --resource-group $rg \
@@ -130,7 +143,8 @@ az vm create --name $vm3 \
 --public-ip-sku Standard \
 --nsg $vnetnsg \
 --storage-sku Standard_LRS \
---os-disk-size-gb 30 
+--os-disk-size-gb 30 \
+--availability-set $scaleset
 
 az vm create --name $vm4 \
 --resource-group $rg \
