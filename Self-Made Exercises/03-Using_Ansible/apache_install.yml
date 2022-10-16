@@ -1,5 +1,5 @@
 - name: Install Apache in webservers
-- hosts: webservers
+  hosts: webservers
   become: yes
   tasks:
     - name: install apache2

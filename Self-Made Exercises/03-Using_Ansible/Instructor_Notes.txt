@@ -29,7 +29,7 @@ sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.5
 sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.6
 sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.7
 sshpass -f /home/ansible/ansible/key.txt ssh-copy-id ansible@10.0.1.8
-rm /home/ansible/ansible/key.txt
+rm -rf /home/ansible/ansible/key.txt
 
 ###########################
 #-Sample Ansible Commands-#
