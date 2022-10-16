@@ -1,0 +1,19 @@
+- name: Ansible Copy Example Local to Remote
+  hosts: webservers
+  become: true 
+  tasks:
+    - name: copying file with playbook
+
+      copy:
+        src: ~/Downloads/index.html
+        dest: /var/www/html
+        owner: apache
+        group: apache        
+        mode: 0755
+        
+      notify:
+        - restart apache2
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted

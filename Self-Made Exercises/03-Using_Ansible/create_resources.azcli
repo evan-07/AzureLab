@@ -212,24 +212,7 @@ az vm run-command invoke \
    -n $vm0 \
    --command-id RunShellScript \
    --scripts "cd /home/ansible && mkdir ansible && chmod 777 ansible && cd ansible && touch inventory && chmod 777 inventory && echo [webservers] >> inventory && echo 10.0.1.5 >> inventory && echo 10.0.1.6 >> inventory && echo 10.0.1.7 >> inventory && echo [dbservers] >> inventory && echo 10.0.1.8 >> inventory"   
-
-############################################################
-##--Clone Git Repo containing sample yml and html files --##
-############################################################
-az vm run-command invoke \
-   -g $rg \
-   -n $vm0 \
-   --command-id RunShellScript \
-   --scripts "cd && git clone https://github.com/evan-07/AzureLab.git"   
-
-############################################################
-##--Clone Git Repo containing sample yml and html files --##
-############################################################
-az vm run-command invoke \
-   -g $rg \
-   -n $vm0 \
-   --command-id RunShellScript \
-   --scripts "cd /home/ansible/AzureLab/'Self-Made Exercises'/03-Using_Ansible && cp apache_install.yml /home/ansible/ansible && cp mysql_install.yml /home/ansible/ansible && cp homepage.html /home/ansible/ansible && chmod 777 /home/ansible/ansible/*.html /home/ansible/ansible/*.yml && cd && rm -rf /home/ansible/AzureLab" /   
+   
 
 #######################
 ##--Create Key file--##
