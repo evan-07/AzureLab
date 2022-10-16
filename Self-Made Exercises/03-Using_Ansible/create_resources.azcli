@@ -229,7 +229,7 @@ az vm run-command invoke \
    -g $rg \
    -n $vm0 \
    --command-id RunShellScript \
-   --scripts "cd /home/ansible/AzureLab/'Self-Made Exercises'/03-Using_Ansible && cp apache_install.yml /home/ansible/ansible && cp mysql_install.yml /home/ansible/ansible && cp homepage.html /home/ansible/ansible && cd && rm -rf /home/ansible/AzureLab" /   
+   --scripts "cd /home/ansible/AzureLab/'Self-Made Exercises'/03-Using_Ansible && cp apache_install.yml /home/ansible/ansible && cp mysql_install.yml /home/ansible/ansible && cp homepage.html /home/ansible/ansible && chmod 777 /home/ansible/ansible/*.html /home/ansible/ansible/*.yml && cd && rm -rf /home/ansible/AzureLab" /   
 
 #######################
 ##--Create Key file--##
