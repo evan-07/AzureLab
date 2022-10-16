@@ -86,7 +86,7 @@ vm4=vm-db1
 scaleset=AnsibleAVSet
 az vm availability-set create \
     --resource-group $rg \
-    --name scaleset \
+    --name $scaleset \
     --platform-fault-domain-count 2 \
     --platform-update-domain-count 2
 
