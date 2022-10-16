@@ -3,7 +3,7 @@
 ################################################################################
 ssh ansible@vm-control.evantech.dev
 cd && git clone https://github.com/evan-07/AzureLab.git
-cd /home/ansible/AzureLab/'Self-Made Exercises'/03-Using_Ansible && cp apache_install.yml /home/ansible/ansible && cp mysql_install.yml /home/ansible/ansible && cp homepage.html /home/ansible/ansible && chmod 777 /home/ansible/ansible/*.html /home/ansible/ansible/*.yml && cd && rm -rf /home/ansible/AzureLab
+cd /home/ansible/AzureLab/'Self-Made Exercises'/03-Using_Ansible && cp *.yml /home/ansible/ansible && cp index.html /home/ansible/ansible && chmod 777 /home/ansible/ansible/*.html /home/ansible/ansible/*.yml && cd && rm -rf /home/ansible/AzureLab
 
 ################
 #-Control node-#
@@ -50,8 +50,15 @@ vi apache_install.yml #paste the contents of the apache_install.yml file from gi
 ansible-playbook -i inventory apache_install.yml --syntax-check
 ansible-playbook -i inventory apache_install.yml
 
+###########################################
+#-Create playbook for Apache Index Update-#
+###########################################
+cd /home/ansible/ansible/
+ansible-playbook -i inventory home_update.yml --syntax-check
+ansible-playbook -i inventory home_update.yml
+
 #########################################
-#--Create playbook for Ansible Install--#
+#--Create playbook for MySQL Install--#
 #########################################
 cd /home/ansible/ansible/
 vi apache_install.yml #paste the contents of the mysql_install.yml file from git repo
