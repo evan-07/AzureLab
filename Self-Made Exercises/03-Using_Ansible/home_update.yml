@@ -5,12 +5,12 @@
     - name: copying file with playbook
 
       copy:
-        src: ~/Downloads/index.html
+        src: ~/ansible/index.html
         dest: /var/www/html
         owner: apache
         group: apache        
         mode: 0755
-        
+
       notify:
         - restart apache2
 
