@@ -1,14 +1,14 @@
 - name: Ansible Copy Example Local to Remote
+  become: yes
   hosts: webservers
-  become: true 
   tasks:
     - name: copying file with playbook
 
       copy:
         src: ~/ansible/index.html
         dest: /var/www/html
-        owner: apache
-        group: apache        
+        owner: root
+        group: root        
         mode: 0755
 
       notify:
