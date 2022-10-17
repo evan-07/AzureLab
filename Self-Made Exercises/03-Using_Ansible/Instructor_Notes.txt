@@ -43,7 +43,7 @@ ansible -i inventory all --args "hostname"
 
 
 #######################################
-#-Create playbook for Ansible Install-#
+#-Create playbook for Apache Install-#
 #######################################
 cd /home/ansible/ansible/
 vi apache_install.yml #paste the contents of the apache_install.yml file from git repo
