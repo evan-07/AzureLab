@@ -258,8 +258,8 @@ az network dns record-set a add-record --ipv4-address $vm2publicip --resource-gr
 az network dns record-set a add-record --ipv4-address $vm3publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm3 --zone $zone
 
 ##########################
-echo "Control Server" "${vm0}@evantech.dev"
-echo "Web Server    " "${vm1}@evantech.dev"
-echo "Web Server    " "${vm2}@evantech.dev"
-echo "Web Server    " "${vm3}@evantech.dev"
+echo "Control Server" "${vm0}.evantech.dev"
+echo "Web Server    " "${vm1}.evantech.dev"
+echo "Web Server    " "${vm2}.evantech.dev"
+echo "Web Server    " "${vm3}.evantech.dev"
 
