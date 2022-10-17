@@ -1,7 +1,7 @@
 ################################################################################
 #-SSH to the control node to setup ansible files, enter password when prompted-#
 ################################################################################
-ssh ansible@vm-control.evantech.dev
+ssh ansible@vm-control.erivanb.me
 cd && git clone https://github.com/evan-07/AzureLab.git
 cd /home/ansible/AzureLab/'Self-Made Exercises'/03-Using_Ansible && cp *.yml /home/ansible/ansible && cp index.html /home/ansible/ansible && chmod 777 /home/ansible/ansible/*.html /home/ansible/ansible/*.yml && cd && rm -rf /home/ansible/AzureLab
 
