@@ -1,0 +1,86 @@
+#The goal of this lab is to show how to create a Jenkins master server using Azure Container Instances with a persistent disk using a File share in a Storage Account.
+#The steps include the following:
+# 1. Create Resource Group
+# 2. Create Storage Account for persistent fileshare
+#    ***Note: The storage account for this exercise is in the same host group as the ACI. Once you create the resource group, the storage will be deleted as well.
+# 3. Create File share inside the newly created Storage account
+# 4. Get the Storage account key and save into a variable
+# 5. Create an Azure container instance using the LTS image of Jenkins in Dockerhub, specifying the fileshare along with it. 
+#    ***Please take note that the IP address used here is a public one due to the purpose of this container is only to provide training to a small group of individuals.
+#    ***For Production applications please consider using using the a private IP address and Azure Bastion for a secured connection.
+# 6. The following variables are created for their respective purpose:
+#    $PUBLIC_IP - IP address with port where you can access Jenkins
+#    $INITIAL_ADMIN_PASS - Initial admin password you will need in configuring Jenkins for the first time
+
+
+########################
+##--Define Variables--##
+########################
+rg=jenkinsRG2
+location=eastus2
+aci="jenkinsACI"
+image="docker.io/jenkins/jenkins:lts"
+port="8080"
+fs="jenkinsFS"
+
+#############################
+##--Create Resource Group--##
+#############################
+az group create --name $rg --location $location
+
+#######################################################
+##--Create Storage Account for Persistent Fileshare--##
+#######################################################
+storageAccount="storagejenkins$RANDOM"
+az storage account create --name $storageAccount \
+--resource-group $rg \
+--location $location \
+--sku Standard_LRS 
+
+################################################
+##--Create File Share inside Storage Account--##
+################################################
+az storage share-rm create \
+  --resource-group $rg \
+  --storage-account $storageAccount\
+  --name $fs \
+  --quota 1024 \
+  --enabled-protocols SMB \
+  --output table 
+sleep 60
+
+############################################################
+##--Create Container Instance with Persistent FIle Share--##
+############################################################
+storageAccountKey=$(az storage account keys list --account-name $storageAccount --resource-group $rg --query "[0].value" -o tsv)
+az container create --resource-group $rg \
+--name $aci \
+--image $image \
+--ports $port \
+--azure-file-volume-account-name $storageAccount \
+--azure-file-volume-account-key $storageAccountKey \
+--ip-address Public \
+--azure-file-volume-share-name $fs \
+--azure-file-volume-mount-path "/var/jenkins_home"
+
+###########################################################################
+##--Get the Initial Admin Password to be used in Jenkins' Initial Setup--##
+###########################################################################
+initialAdminPass=$(az container exec -g $rg \
+--name $aci \
+--container-name $aci \
+--exec-command "cat /var/jenkins_home/secrets/initialAdminPassword")
+
+###########################################################
+##--Get the Public IP Address of the Container Instance--##
+###########################################################
+publicIP=$(az container show --name $aci \
+--resource-group $rg \
+--query ipAddress.ip \
+--output tsv)
+
+###############################################################
+##--Display the public URL and Admin Pass for configuration--##
+###############################################################
+echo "Public IP="$publicIP":"$port
+echo "Initial Admin Pass="$initialAdminPass
