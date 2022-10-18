@@ -1,0 +1,1 @@
+This exercise is a guide to help setup Jenkins in a non-prod environment and make a simple CI/CD Project. 
