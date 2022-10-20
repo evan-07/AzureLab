@@ -1,0 +1,8 @@
+curl -I -u erivan-jenkins:11030bb1ea25f7e5289d313e2079527abd http://jenkins.erivanb.me:8080/job/demobuild-erivan/build?token=apitoken
+curl -I -u erivan-jenkins:11030bb1ea25f7e5289d313e2079527abd http://jenkins.erivanb.me:8080/job/DemoWithParam/buildWithParameters?token=apitoken&env=prod
+
+curl -I -u francis-jenkins:11226042b3e83afa1a24b69b743da6d6ab http://jenkins.erivanb.me:8080/job/demobuild-erivan/build?token=apitoken
+curl -I -u francis-jenkins:11226042b3e83afa1a24b69b743da6d6ab http://jenkins.erivanb.me:8080/job/DemoWithParam/buildWithParameters?token=apitoken&env=prod
+
+curl -I -u paulo-jenkins:11461203eeff84e8f71cab5945a6fafb6f http://jenkins.erivanb.me:8080/job/demobuild-erivan/build?token=apitoken
+curl -I -u paulo-jenkins:11461203eeff84e8f71cab5945a6fafb6f http://jenkins.erivanb.me:8080/job/DemoWithParam/buildWithParameters?token=apitoken&env=prod
