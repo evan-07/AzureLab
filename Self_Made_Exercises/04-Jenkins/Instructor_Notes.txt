@@ -6,3 +6,14 @@ curl -I -u francis-jenkins:11226042b3e83afa1a24b69b743da6d6ab http://jenkins.eri
 
 curl -I -u paulo-jenkins:11461203eeff84e8f71cab5945a6fafb6f http://jenkins.erivanb.me:8080/job/demobuild-erivan/build?token=apitoken
 curl -I -u paulo-jenkins:11461203eeff84e8f71cab5945a6fafb6f http://jenkins.erivanb.me:8080/job/DemoWithParam/buildWithParameters?token=apitoken&env=prod
+
+
+
+-- List of accounts and tokens --
+anthony-jenkins	apitoken	110c88f5262bcbbdea52f6e40c5f565e98
+erivan-jenkins	apitoken	11030bb1ea25f7e5289d313e2079527abd
+francis-jenkins	apitoken	11226042b3e83afa1a24b69b743da6d6ab
+jerome-jenkins	apitoken	11525ba31d8557a604327798c179f0bfc2
+paulo-jenkins	apitoken	11461203eeff84e8f71cab5945a6fafb6f
+roden-jenkins	apitoken	1170b3efac8fb21ea9219147c847a19b44
+rutchie-jenkins	apitoken	11f5e329cd78a14e914a5c1d28e097ec8b
