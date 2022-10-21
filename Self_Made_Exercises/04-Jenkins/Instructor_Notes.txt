@@ -20,6 +20,9 @@ rutchie-jenkins	11f5e329cd78a14e914a5c1d28e097ec8b
 
 
 References:
+https://github.com/ashiqursuperfly/Jenkins-Controller-Agent-Setup
+
+
 https://www.middlewareinventory.com/blog/jenkins-remote-build-trigger-url/
 jenkins.io/doc/book/using/remote-access-api/ 
 https://narenchejara.medium.com/trigger-jenkins-job-remotely-using-jenkins-api-20973618a493
