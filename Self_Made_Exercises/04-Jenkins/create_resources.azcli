@@ -18,20 +18,15 @@
 ########################
 rg=jenkinsRG2
 location=eastus2
-aci="jenkinsACI"
+aci="jenkinsaci"
 image="docker.io/jenkins/jenkins:lts"
 port="8080"
-fs="jenkinsFS"
+fs="jenkinsfs"
 
 #############################
 ##--Create Resource Group--##
 #############################
 az group create --name $rg --location $location
-
-
-
-
-
 
 
 

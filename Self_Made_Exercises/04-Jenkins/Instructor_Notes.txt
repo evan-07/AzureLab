@@ -23,3 +23,4 @@ References:
 https://www.middlewareinventory.com/blog/jenkins-remote-build-trigger-url/
 jenkins.io/doc/book/using/remote-access-api/ 
 https://narenchejara.medium.com/trigger-jenkins-job-remotely-using-jenkins-api-20973618a493
+>>>>>>> 08ebdfe141d6efe8515136345d3485044308f1e7
