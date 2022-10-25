@@ -1,43 +1,247 @@
-#The goal of this lab is to show how to create a Jenkins master server using Azure Container Instances with a persistent disk using a File share in a Storage Account.
-#The steps include the following:
-# 1. Create Resource Group
-# 2. Create Storage Account for persistent fileshare
-#    ***Note: The storage account for this exercise is in the same host group as the ACI. Once you create the resource group, the storage will be deleted as well.
-# 3. Create File share inside the newly created Storage account
-# 4. Get the Storage account key and save into a variable
-# 5. Create an Azure container instance using the LTS image of Jenkins in Dockerhub, specifying the fileshare along with it. 
-#    ***Please take note that the IP address used here is a public one due to the purpose of this container is only to provide training to a small group of individuals.
-#    ***For Production applications please consider using using the a private IP address and Azure Bastion for a secured connection.
-# 6. The following variables are created for their respective purpose:
-#    $PUBLIC_IP - IP address with port where you can access Jenkins
-#    $INITIAL_ADMIN_PASS - Initial admin password you will need in configuring Jenkins for the first time
-
-
-########################
-##--Define Variables--##
-########################
-rg=jenkinsRG2
+#########################
+##--Declare Variables--##
+#########################
+rg=RG1
 location=eastus2
-aci="jenkinsaci"
-image="docker.io/jenkins/jenkins:lts"
-port="8080"
-fs="jenkinsfs"
+vnet=vnet1
+vnetip=10.0.0.0/16
+subnet=subnet1
+subnetip=10.0.1.0/24
+vnetnsg=vnetnsg
+image=CentOS
+size=Standard B1s
+vm0=vm-jenkins
 
 #############################
 ##--Create Resource Group--##
 #############################
 az group create --name $rg --location $location
 
+###################
+##--Create VNET--##
+###################
+az network vnet create \
+--resource-group $rg \
+--location $location \
+--address-prefixes $vnetip \
+--name $vnet
+
+#####################
+##--Create Subnet--##
+#####################
+az network vnet subnet create --address-prefixes $subnetip --name $subnet --resource-group $rg --vnet-name $vnet 
+
+##################
+##--Create NSG--##
+##################
+az network nsg create --name $vnetnsg --resource-group $rg --location $location
+
+###############################################
+##--Create NSG rule to allow SSH connection--##
+###############################################
+az network nsg rule create --name AllowSSHInbound \
+                           --nsg-name $vnetnsg \
+                           --priority 1000 \
+                           --resource-group $rg \
+                           --access Allow \
+                           --destination-port-ranges 22\
+                           --description "Allow SSH Inbound Connections" \
+                           --direction Inbound \
+                           --protocol TCP
+                           
+################################################
+##--Create NSG rule to allow HTTP connection--##
+################################################
+az network nsg rule create --name AllowHTTPInbound \
+                           --nsg-name $vnetnsg \
+                           --priority 1600 \
+                           --resource-group $rg \
+                           --access Allow \
+                           --destination-port-ranges 8080 \
+                           --description "Allow HTTP Inbound Connections" \
+                           --direction Inbound \
+                           --protocol TCP
+
+################################################
+##--Create Virtual Machines Availability Set--##
+################################################
+scaleset=AnsibleAVSet
+az vm availability-set create \
+    --resource-group $rg \
+    --name $scaleset \
+    --platform-fault-domain-count 2 \
+    --platform-update-domain-count 2
+
+###############################
+##--Create Virtual Machines--##
+###############################
+az vm create --name $vm0 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username ansible \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg \
+--storage-sku Standard_LRS \
+--os-disk-size-gb 30 
+
+az vm create --name $vm1 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username ansible \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg \
+--storage-sku Standard_LRS \
+--os-disk-size-gb 30 \
+--availability-set $scaleset
+
+az vm create --name $vm2 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username ansible \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg \
+--storage-sku Standard_LRS \
+--os-disk-size-gb 30 \
+--availability-set $scaleset
+
+az vm create --name $vm3 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username ansible \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg \
+--storage-sku Standard_LRS \
+--os-disk-size-gb 30 \
+--availability-set $scaleset
+
+az vm create --name $vm4 \
+--resource-group $rg \
+--location $location \
+--image $image \
+--admin-username ansible \
+--admin-password 1qazXSW@3edc \
+--vnet-name $vnet  \
+--subnet $subnet \
+--public-ip-sku Standard \
+--nsg $vnetnsg \
+--storage-sku Standard_LRS \
+--os-disk-size-gb 30 
+
+#Update Private IP addresses of NICs to static
+#az network nic ip-config update \
+#    --name ${vm0}PublicIp \
+#    --resource-group $rg \
+#    --nic-name ${vm0}VMNic \
+#    --private-ip-address 10.0.1.10
+#
+#az network nic ip-config update \
+#    --name ${vm1}PublicIp \
+#    --resource-group $rg \
+#    --nic-name ${vm1}VMNic \
+#    --private-ip-address 10.0.1.11
+#
+#az network nic ip-config update \
+#    --name ${vm2}PublicIp \
+#    --resource-group $rg \
+#    --nic-name ${vm2}VMNic \
+#    --private-ip-address 10.0.1.12
+#
+#az network nic ip-config update \
+#    --name ${vm3}PublicIp \
+#    --resource-group $rg \
+#    --nic-name ${vm3}VMNic \
+#    --private-ip-address 10.0.1.13
+#
+#az network nic ip-config update \
+#    --name ${vm4}PublicIp \
+#    --resource-group $rg \
+#    --nic-name ${vm4}VMNic \
+#    --private-ip-address 10.0.1.14
+
+######################
+##--Install python--##
+######################
+az vm run-command invoke \
+   -g $rg \
+   -n $vm0 \
+   --command-id RunShellScript \
+   --scripts "sudo apt-get update && sudo apt install python ansible -y"
+#   --scripts "sudo apt-get update && sudo apt-get install -y libssl-dev libffi-dev python-dev python-pip "
+
+####################################
+##--Install other modules needed--##
+####################################
+az vm run-command invoke \
+   -g $rg \
+   -n $vm0 \
+   --command-id RunShellScript \
+   --scripts "sudo apt install whois -y && sudo apt-get install sshpass"
+
+#######################
+##--Install Ansible--##
+#######################
+az vm run-command invoke \
+   -g $rg \
+   -n $vm0 \
+   --command-id RunShellScript \
+   --scripts "sudo pip install ansible[azure]"
+
+################################################
+##--Create Ansible folder and inventory file--##
+################################################
+az vm run-command invoke \
+   -g $rg \
+   -n $vm0 \
+   --command-id RunShellScript \
+   --scripts "cd /home/ansible && mkdir ansible && chmod 777 ansible && cd ansible && touch inventory && chmod 777 inventory && echo [webservers] >> inventory && echo 10.0.1.5 >> inventory && echo 10.0.1.6 >> inventory && echo 10.0.1.7 >> inventory && echo [dbservers] >> inventory && echo 10.0.1.8 >> inventory"   
+   
+
+#######################
+##--Create Key file--##
+#######################
+az vm run-command invoke \
+   -g $rg \
+   -n $vm0 \
+   --command-id RunShellScript \
+   --scripts "cd /home/ansible/ansible && echo 1qazXSW@3edc > key.txt"   
+
+############################################
+##--Display Public IP of the web servers--##
+############################################
+vm0publicip=$(az network public-ip show -g $rg -n ${vm0}PublicIp --query ipAddress --output tsv)
+vm1publicip=$(az network public-ip show -g $rg -n ${vm1}PublicIp --query ipAddress --output tsv)
+vm2publicip=$(az network public-ip show -g $rg -n ${vm2}PublicIp --query ipAddress --output tsv)
+vm3publicip=$(az network public-ip show -g $rg -n ${vm3}PublicIp --query ipAddress --output tsv)
 
 
+#############################################
+###--Add an A record set to the DNS zone--###
+#############################################
+#zone=evantech.dev
+zone=erivanb.me
+az network dns record-set a add-record --ipv4-address $vm0publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm0 --zone $zone
+az network dns record-set a add-record --ipv4-address $vm1publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm1 --zone $zone
+az network dns record-set a add-record --ipv4-address $vm2publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm2 --zone $zone
+az network dns record-set a add-record --ipv4-address $vm3publicip --resource-group cloud-shell-storage-southeastasia --record-set-name $vm3 --zone $zone
 
-
-
-
-
-
-
-
-
-
-
+##########################
+echo "Control Server" "$vm0.$zone"
+echo "Web Server    " "$vm1.$zone"
+echo "Web Server    " "$vm2.$zone"
+echo "Web Server    " "$vm3.$zone"
