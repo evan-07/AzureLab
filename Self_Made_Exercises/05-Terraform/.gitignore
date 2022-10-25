@@ -10,3 +10,4 @@
 
 # Sensitive data
 *.tfvars
+*.conf
