@@ -77,7 +77,9 @@ az vm create --name $vm0 \
 --public-ip-sku Standard \
 --nsg $vnetnsg \
 --storage-sku Standard_LRS \
---os-disk-size-gb 30 
+--os-disk-size-gb 30 \
+--os-disk-delete-option Delete \
+--nic-delete-option Delete
 
 ############################################
 ##--Display Public IP of the web servers--##
