@@ -11,7 +11,7 @@ vnetnsg=vnetnsg
 image=CentOS
 size=Standard B1s
 vm0=vm-jenkins
-adminuser=
+adminuser=admincontrol
 adminpass=1qazXSW@3edc
 
 #############################

@@ -1,53 +1,20 @@
-curl -I http://jenkins.erivanb.me:8080
-curl -I -u erivan-jenkins:11030bb1ea25f7e5289d313e2079527abd "http://jenkins.erivanb.me:8080/job/FP2-erivan/buildWithParameters?env=prod"
-curl -I -u erivan-jenkins:11030bb1ea25f7e5289d313e2079527abd "http://jenkins.erivanb.me:8080/job/FP2-erivan/buildWithParameters?token=apitoken&env=prod"
+Additional Tasks after provisioning resources:
 
+1. Install Jenkins (https://www.jenkins.io/doc/book/installing/linux/#long-term-support-release-3)
+    sudo wget -O /etc/yum.repos.d/jenkins.repo \
+        https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+    sudo yum upgrade
+    sudo yum install java-11-openjdk # Add required dependencies for the jenkins package
+    sudo yum install jenkins # Add required dependencies for the jenkins package
+    sudo systemctl daemon-reload # Add required dependencies for the jenkins package
+    sudo systemctl enable jenkins #enable the Jenkins service to start at boot
+    sudo systemctl start jenkins #start the Jenkins service
+    sudo systemctl status jenkins #check the status of the Jenkins service
 
+2. Install Git
+    sudo yum install git
 
--- List of accounts and tokens --
-Account:  anthony-jenkins
-Password: 1qazXSW@3edc
-Token:    110c88f5262bcbbdea52f6e40c5f565e98
-
-Account:  erivan-jenkins
-Password: 1qazXSW@3edc
-Token:    11030bb1ea25f7e5289d313e2079527abd
-
-Account:  francis-jenkins
-Password: 1qazXSW@3edc
-Token:    11226042b3e83afa1a24b69b743da6d6ab
-
-Account:  jerome-jenkins
-Password: 1qazXSW@3edc
-Toekn:    11525ba31d8557a604327798c179f0bfc2
-
-Account:  paulo-jenkins
-Password: 1qazXSW@3edc
-Token:    11461203eeff84e8f71cab5945a6fafb6f
-
-Account:  roden-jenkins	
-Password: 1qazXSW@3edc
-Token:    1170b3efac8fb21ea9219147c847a19b44
-
-Account:  rutchie-jenkins
-Password: 1qazXSW@3edc
-Token:    11f5e329cd78a14e914a5c1d28e097ec8b
-
-Account:  jp-jenkins
-Password: 1qazXSW@3edc
-Token:    
-
-Account:  nowelle-jenkins
-Password: 1qazXSW@3edc
-Token:    
-
-Account:  ruth-jenkins
-Password: 1qazXSW@3edc
-Token:    
-
-Account:  gerwell-jenkins
-Password: 1qazXSW@3edc
-Token:    
 
 References:
 https://github.com/ashiqursuperfly/Jenkins-Controller-Agent-Setup
