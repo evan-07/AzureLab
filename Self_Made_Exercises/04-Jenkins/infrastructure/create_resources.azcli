@@ -21,8 +21,7 @@ az group create --name $rg --location $location
 
 ###################
 ##--Create VNET--##
-###################
-az network vnet create \
+################### 
 --resource-group $rg \
 --location $location \
 --address-prefixes $vnetip \

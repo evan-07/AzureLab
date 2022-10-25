@@ -16,6 +16,11 @@ Additional Tasks after provisioning resources:
     sudo yum install git
 
 
+
+Command for curl remote trigger:
+curl -i -u erivan-jenkins:11030bb1ea25f7e5289d313e2079527abd "http://jenkins.erivanb.me:8080/job/FP2-erivan/buildWithParameters?token=apitoken&env=prod"
+
+
 References:
 https://github.com/ashiqursuperfly/Jenkins-Controller-Agent-Setup
 
